@@ -2,80 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class Player : MonoBehaviour
 {
-    public float score;
+    public Vector2 inputVec;
+    public float speed;
+    
 
-
-    float moveSpeed = 2f;
-    [SerializeField] Sprite spriteUp;
-    [SerializeField] Sprite spriteDown;
-    [SerializeField] Sprite spriteRight;
-    [SerializeField] Sprite spriteLeft;
-
-
-    [SerializeField] TextMeshProUGUI scoreText;
-
-    Rigidbody2D rb;
-    SpriteRenderer sR;
-
-    Vector2 input;
-    Vector2 velocity;
-
+    Rigidbody2D rigid;
+    SpriteRenderer spriter;
+    Animator anim;
+     
     private void Awake()
     {
+        rigid = GetComponent<Rigidbody2D>();
+        spriter = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
 
-
-        rb = GetComponent<Rigidbody2D>();
-        sR = GetComponent<SpriteRenderer>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-
-        
-     
     }
-    void Update()
-    {
-        input.x = Input.GetAxisRaw("Horizontal");
-        input.y = Input.GetAxisRaw("Vertical");
 
-        velocity = input.normalized * moveSpeed;
+    
 
-        if(input.sqrMagnitude > .01f)
-        {
-            if(Mathf.Abs(input.x) > Mathf.Abs(input.y))
-            {
-                if (input.x > 0)
-                    sR.sprite = spriteRight;
-                else if (input.x < 0)
-                    sR.sprite = spriteLeft;
-            }
-            else
-            {
-                if (input.y > 0)
-                    sR.sprite = spriteUp;
-                else
-                    sR.sprite = spriteDown;
-            }
-        }       
-    }
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime); 
+        Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
+        rigid.MovePosition(rigid.position + nextVec);
     }
 
-     private void OnTriggerEnter2D(Collider2D collision)
+    private void LateUpdate()
     {
-        if(collision.CompareTag("Item"))
+        anim.SetFloat("Speed", inputVec.magnitude);
+        
+        if(inputVec.x != 0)
         {
-            score += collision.GetComponent<Item>().GetPoint();
-            scoreText.text = score.ToString();
-            Destroy(collision.gameObject);
+            spriter.flipX = inputVec.x < 0;
         }
     }
 
-
-
+    void OnMove(InputValue value)
+    {
+        inputVec = value.Get<Vector2>();
+    }
 }
 
