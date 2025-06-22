@@ -30,17 +30,18 @@ public class BulletPos : MonoBehaviour
 
     IEnumerator ShootSequence()
     {
+
         canShoot = false;
 
         yield return new WaitForSeconds(0.5f);
-        if (player.MP >= 15)
+        if (!player.isDead && player.MP >= 15)
         {
             Shoot();
             player.MP -= 15;
         }
 
         yield return new WaitForSeconds(0.4f); // 0.9초까지 기다리도록 (0.5 + 0.4)
-        if (player.MP >= 15)
+        if (!player.isDead && player.MP >= 15)
         {
             Shoot();
             player.MP -= 15;

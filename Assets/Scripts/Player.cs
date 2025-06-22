@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
 
     CapsuleCollider2D CapCol;
 
+    [SerializeField] private PlayerHpMp playerHpMp; // 사망 상태 확인
+
 
     [SerializeField] private SpriteRenderer shadowSpriter;
 
@@ -28,12 +30,19 @@ public class Player : MonoBehaviour
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         CapCol = GetComponent<CapsuleCollider2D>();
+
+        if (playerHpMp == null)
+            playerHpMp = GetComponent<PlayerHpMp>();
     }
 
     private void Update()
     {
+
+        if (playerHpMp != null && playerHpMp.isDead)
+            return; // 사망 상태일 경우 조작 불가
+
         // 공격 중이 아니면 입력을 받아 이동 가능
-        if(!isAttacking)
+        if (!isAttacking)
         {
             inputVec.x = Input.GetAxisRaw("Horizontal");
             inputVec.y = Input.GetAxisRaw("Vertical");
@@ -55,6 +64,11 @@ public class Player : MonoBehaviour
     //공격중 이동 금지를 위한 코루틴
     IEnumerator AttackRoutine()
     {
+        if (!playerHpMp.isDead)
+        {
+            isAttacking = false;
+        }
+            
         isAttacking = true;                         //이동 금지
         yield return new WaitForSeconds(1.3f);      //1.1초 대기
         isAttacking = false;                        //이동 가능
@@ -62,6 +76,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (playerHpMp != null && playerHpMp.isDead)
+            return; // 사망 시 이동 금지
+
         //물리 이동 처리
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
@@ -69,6 +86,9 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (playerHpMp != null && playerHpMp.isDead)
+            return;
+
         //애니메이션 속도 파라미터 설정(움직임에 따라)
         anim.SetFloat("Speed",inputVec.magnitude);
 
