@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     CapsuleCollider2D CapCol;
 
 
+    [SerializeField] private SpriteRenderer shadowSpriter;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -54,7 +56,7 @@ public class Player : MonoBehaviour
     IEnumerator AttackRoutine()
     {
         isAttacking = true;                         //이동 금지
-        yield return new WaitForSeconds(1.1f);      //1.1초 대기
+        yield return new WaitForSeconds(1.3f);      //1.1초 대기
         isAttacking = false;                        //이동 가능
     }
 
@@ -75,6 +77,11 @@ public class Player : MonoBehaviour
         {
             bool isLeft = inputVec.x < 0;
             spriter.flipX = isLeft;
+
+            //그림자도 같은 방향으로 반전
+            if (shadowSpriter != null)
+                shadowSpriter.flipX = isLeft;
+
 
             // 콜라이더의 offset.x 반전
             Vector2 offset = CapCol.offset;
