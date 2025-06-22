@@ -11,13 +11,17 @@ public class BulletPos : MonoBehaviour
 
     Camera cam;         //메인카메라
 
+    private bool canShoot = true;
+
+    [SerializeField] private PlayerHpMp player; // MP를 줄이기 위한 참조
+
     private void Start()
     {
         cam = Camera.main;
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canShoot)
         {
             StartCoroutine(ShootSequence());
         }
@@ -26,11 +30,24 @@ public class BulletPos : MonoBehaviour
 
     IEnumerator ShootSequence()
     {
+        canShoot = false;
+
         yield return new WaitForSeconds(0.5f);
-        Shoot();
+        if (player.MP >= 15)
+        {
+            Shoot();
+            player.MP -= 15;
+        }
 
         yield return new WaitForSeconds(0.4f); // 0.9초까지 기다리도록 (0.5 + 0.4)
-        Shoot();
+        if (player.MP >= 15)
+        {
+            Shoot();
+            player.MP -= 15;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        canShoot = true;
     }
 
     void Shoot()
@@ -47,5 +64,8 @@ public class BulletPos : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.AddForce(direction * bulletSpeed, ForceMode2D.Impulse);
 
+        // 4. 총알 스프라이트를 방향에 맞게 회전
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); // Z축 회전 (2D)     
     }
 }

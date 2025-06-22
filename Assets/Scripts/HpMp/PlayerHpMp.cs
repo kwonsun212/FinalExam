@@ -38,7 +38,7 @@ public class PlayerHpMp : Entity
 
     public override float HPRecovery => 0;     //초당 Hp회복
     public override float MaxMP => 200;
-    public override float MPRecovery => 25;     //초당 Mp회복
+    public override float MPRecovery => 10;     //초당 Mp회복
 
     public override void TakeDamage(float damage)
     {
