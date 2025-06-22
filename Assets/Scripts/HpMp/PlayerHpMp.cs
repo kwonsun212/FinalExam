@@ -109,11 +109,11 @@ public class PlayerHpMp : Entity
         Invincible = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)     //Enemy에게 닿으면 피해입음  
+    private void OnCollisionEnter2D(Collision2D collision)     //Enemy에게 닿으면 피해입음  
     {
         if (isDead) return;//사망 확인
 
-        if (collision.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             //고정 피해 10
             TakeDamage(10);
