@@ -1,49 +1,86 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 public class Player : MonoBehaviour
 {
-    public Vector2 inputVec;
-    public float speed;
-    
 
-    Rigidbody2D rigid;
+    public Vector2 inputVec;        //플레이어 입력 방향
+    public float speed;             //이동 속도
+
+    Rigidbody2D rigid;              
     SpriteRenderer spriter;
     Animator anim;
-     
+
+    bool isAttacking = false;       //공격 중인지 여부(공격중이면 이동 불가)
+
+    CapsuleCollider2D CapCol;
+
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
-
+        CapCol = GetComponent<CapsuleCollider2D>();
     }
 
-    
+    private void Update()
+    {
+        // 공격 중이 아니면 입력을 받아 이동 가능
+        if(!isAttacking)
+        {
+            inputVec.x = Input.GetAxisRaw("Horizontal");
+            inputVec.y = Input.GetAxisRaw("Vertical");
+        }
+        else
+        {
+            inputVec = Vector2.zero;    //  공격 중일 땐 입력 무시 
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) &&
+            !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !isAttacking)
+        {
+            anim.SetTrigger("Attack");                  //애니메이션 트리거 설정
+            StartCoroutine(AttackRoutine());            //공격 처리 코루틴 시작
+        }
+    }
+
+    //공격중 이동 금지를 위한 코루틴
+    IEnumerator AttackRoutine()
+    {
+        isAttacking = true;                         //이동 금지
+        yield return new WaitForSeconds(1.1f);      //1.1초 대기
+        isAttacking = false;                        //이동 가능
+    }
 
     private void FixedUpdate()
     {
-        Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
+        //물리 이동 처리
+        Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
     }
 
     private void LateUpdate()
     {
-        anim.SetFloat("Speed", inputVec.magnitude);
-        
-        if(inputVec.x != 0)
-        {
-            spriter.flipX = inputVec.x < 0;
-        }
-    }
+        //애니메이션 속도 파라미터 설정(움직임에 따라)
+        anim.SetFloat("Speed",inputVec.magnitude);
 
-    void OnMove(InputValue value)
-    {
-        inputVec = value.Get<Vector2>();
+        //이동 방향에 따라 스프라이트 반전
+        if (inputVec.x != 0)
+        {
+            bool isLeft = inputVec.x < 0;
+            spriter.flipX = isLeft;
+
+            // 콜라이더의 offset.x 반전
+            Vector2 offset = CapCol.offset;
+            offset.x = Mathf.Abs(offset.x) * (isLeft ? 1 : -1);
+            CapCol.offset = offset;
+        }
     }
 }
 
