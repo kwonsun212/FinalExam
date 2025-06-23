@@ -80,4 +80,32 @@ public class BulletPos : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); // ZÃà È¸Àü (2D)     
     }
+    public void ShootCounterBullets()
+    {
+        if (player.MP >= 100)
+        {
+            player.MP -= 100;
+            Vector2[] directions = new Vector2[]
+            {
+                  Vector2.up,
+                  Vector2.down,
+                  Vector2.left,
+                  Vector2.right,
+                  new Vector2(1,1).normalized,
+                  new Vector2(-1,1).normalized,
+                  new Vector2(1,-1).normalized,
+                  new Vector2(-1,-1).normalized,
+            };
+
+            foreach (Vector2 dir in directions)
+            {
+                GameObject bullet = Instantiate(preFabBullet, bulletPos.transform.position, Quaternion.identity);
+                Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+                rb.AddForce(dir * bulletSpeed, ForceMode2D.Impulse);
+
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            }
+        }
+    }
 }

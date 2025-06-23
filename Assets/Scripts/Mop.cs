@@ -10,7 +10,7 @@ public class Mop : MonoBehaviour
     public RuntimeAnimatorController[] animCon;
     public Rigidbody2D target;
     
-    bool isLive = true;
+    public bool isLive = true;
        
     private float currentHP;
     public float maxHP = 100;

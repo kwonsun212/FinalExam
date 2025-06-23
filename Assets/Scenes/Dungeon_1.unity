@@ -9391,7 +9391,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -3318188226485093758, guid: ae72133dacba6ec4eb33ecde48f50e56,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -10209,6 +10209,7 @@ MonoBehaviour:
   speed: 2
   animCon: []
   target: {fileID: 119181752}
+  isLive: 1
   maxHP: 100
 --- !u!1 &946086410
 GameObject:

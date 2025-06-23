@@ -120,7 +120,14 @@ public class PlayerHpMp : Entity
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //고정 피해 10
+            Mop mop = collision.gameObject.GetComponent<Mop>();
+            if (mop != null && mop.isLive == false)
+            {
+                // 죽은 적이면 데미지 무시
+                return;
+            }
+
+            // 고정 피해 10
             TakeDamage(10);
         }
     }
