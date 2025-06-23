@@ -86,6 +86,11 @@ public class PlayerHpMp : Entity
         }
     }
 
+    public void SetInvincible(bool value)
+    {
+        Invincible = value;
+    }
+
     private IEnumerator HitAnimation()
     {
         Color color = spriteRenderer.color;

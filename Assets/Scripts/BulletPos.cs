@@ -13,15 +13,23 @@ public class BulletPos : MonoBehaviour
 
     private bool canShoot = true;
 
+
     [SerializeField] private PlayerHpMp player; // MP를 줄이기 위한 참조
+    [SerializeField] private Player move; // 슬라이딩 상채 확인
 
     private void Start()
     {
         cam = Camera.main;
+
+        if (player == null)
+            player = FindObjectOfType<PlayerHpMp>();
+
+        if (move == null)
+            move = FindObjectOfType<Player>();
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && canShoot)
+        if (Input.GetMouseButtonDown(0) && canShoot && !player.isDead && !move.IsSliding)
         {
             StartCoroutine(ShootSequence());
         }
@@ -30,18 +38,21 @@ public class BulletPos : MonoBehaviour
 
     IEnumerator ShootSequence()
     {
-
         canShoot = false;
 
         yield return new WaitForSeconds(0.5f);
-        if (!player.isDead && player.MP >= 15)
+        if (player.isDead) yield break;
+
+        if (player.MP >= 15)
         {
             Shoot();
             player.MP -= 15;
         }
 
-        yield return new WaitForSeconds(0.4f); // 0.9초까지 기다리도록 (0.5 + 0.4)
-        if (!player.isDead && player.MP >= 15)
+        yield return new WaitForSeconds(0.4f);
+        if (player.isDead) yield break;
+
+        if (player.MP >= 15)
         {
             Shoot();
             player.MP -= 15;
