@@ -51,7 +51,7 @@ public class PlayerHpMp : Entity
     // 기본 체력 + 스탯 보너스 + 버프 등과 같이 계산
     public override float MaxHP => MaxHPBasic + MaxHPAttrBonus;
     // 100 + 현재레벨 * 30
-    public float MaxHPBasic => 100 + 1 * 30;
+    public float MaxHPBasic => 100 + 1 * 800;
     // 힘 * 10
     public float MaxHPAttrBonus => 10 * 10;
 
