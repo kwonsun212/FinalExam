@@ -49,7 +49,7 @@ public class Mop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Bullet"))
+        if (!collision.CompareTag("Bullet") || !isLive )
             return;
 
         currentHP -= collision.GetComponent<Bullet>().damage;
@@ -70,6 +70,14 @@ public class Mop : MonoBehaviour
         //gameObject.SetActive(false);
         isLive = false;
         anim.SetTrigger("Dead");
+
+
+        // 충돌 방지용 Collider 비활성화
+        GetComponent<Collider2D>().enabled = false;
+
+        // 10초 후 완전 삭제
+        Destroy(gameObject, 10f);
+
 
         // 경험치 구슬 1~5개 랜덤 생성
         if (expOrbPrefab != null)
