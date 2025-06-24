@@ -33,11 +33,12 @@ public class LevelUpUIManager : MonoBehaviour
         player = FindObjectOfType<Player>();
 
         if (playerStat != null)
-            playerStat.OnLevelUp += ShowLevelUpUI;
+            playerStat.OnLevelUp += () => StartCoroutine(ShowLevelUpUI());
     }
 
-    void ShowLevelUpUI()
+    IEnumerator ShowLevelUpUI()
     {
+        yield return new WaitForSecondsRealtime(0.2f); // 0.2초 기다림
         Time.timeScale = 0f;
         levelUpPanel.SetActive(true);
     }
