@@ -38,7 +38,7 @@ public class LevelUpUIManager : MonoBehaviour
 
     IEnumerator ShowLevelUpUI()
     {
-        yield return new WaitForSecondsRealtime(0.2f); // 0.2초 기다림
+        yield return new WaitForSecondsRealtime(0.4f); // 0.4초 기다림
         Time.timeScale = 0f;
         levelUpPanel.SetActive(true);
     }
