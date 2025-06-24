@@ -21,8 +21,8 @@ public class LevelUpUIManager : MonoBehaviour
         levelUpPanel.SetActive(false);
 
         atkButton.onClick.AddListener(() => SelectStat("atk"));
-        hpButton.onClick.AddListener(() => SelectStat("hp"));
-        mpButton.onClick.AddListener(() => SelectStat("mp"));
+        hpButton.onClick.AddListener(() => SelectStat("hpBonus"));
+        mpButton.onClick.AddListener(() => SelectStat("mpBonus"));
         speedButton.onClick.AddListener(() => SelectStat("speed"));
     }
     private void Start()
@@ -49,11 +49,11 @@ public class LevelUpUIManager : MonoBehaviour
             case "atk":
                 playerStat.attackDamage += 50f;
                 break;
-            case "hp":
-                playerHpMp.HP += 100;
+            case "hpBonus":
+                playerHpMp.hpBonus += 100;
                 break;
-            case "mp":
-                playerHpMp.MP += 50;
+            case "mpBonus":
+                playerHpMp.mpBonus += 50;
                 break;
             case "speed":
                 player.speed += 1f;

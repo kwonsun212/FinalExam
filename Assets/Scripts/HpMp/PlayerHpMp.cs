@@ -11,6 +11,9 @@ public class PlayerHpMp : Entity
 
     public bool isDead { get; private set; } = false;
 
+    public float hpBonus = 0f;  // 추가 HP
+    public float mpBonus = 0f;  // 추가 MP
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -38,14 +41,14 @@ public class PlayerHpMp : Entity
     }
 
     // 기본 체력 + 스탯 보너스 + 버프 등과 같이 계산
-    public override float MaxHP => MaxHPBasic + MaxHPAttrBonus;
+    public override float MaxHP => MaxHPBasic + MaxHPAttrBonus + hpBonus;
     // 100 + 현재레벨 * 30
-    public float MaxHPBasic => 100 + 1 * 800;
+    public float MaxHPBasic => 100 + 1 * 900;
     // 힘 * 10
-    public float MaxHPAttrBonus => 10 * 10;
+    public float MaxHPAttrBonus => 0;
 
     public override float HPRecovery => 0;     //초당 Hp회복
-    public override float MaxMP => 200;
+    public override float MaxMP => 200 + mpBonus;
     public override float MPRecovery => 10;     //초당 Mp회복
 
     public override void TakeDamage(float damage)
