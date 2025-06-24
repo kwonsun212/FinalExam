@@ -16,6 +16,11 @@ public class PlayerStat : MonoBehaviour
 
     [SerializeField] private GameObject levelUpEffectPrefab;
 
+    public delegate void OnLevelUpDelegate();
+    public event OnLevelUpDelegate OnLevelUp;
+
+    public float attackDamage = 50f;
+
     private void Start()
     {
         UpdateExpUI(); // 시작 시 UI 초기화
@@ -57,6 +62,12 @@ public class PlayerStat : MonoBehaviour
             GameObject textObj = Instantiate(levelUpTextPrefab, transform.position + Vector3.up * 1.5f, Quaternion.identity);
             textObj.transform.SetParent(null); // 캔버스는 World Space이므로 따로 붙이지 않음
         }
+
+        //이벤트 호출
+        OnLevelUp?.Invoke();
+
+        // 경험치 UI 갱신
+        UpdateExpUI();
     }
 
     void UpdateExpUI()

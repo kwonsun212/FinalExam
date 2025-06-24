@@ -16,6 +16,7 @@ public class BulletPos : MonoBehaviour
 
     [SerializeField] private PlayerHpMp player; // MP를 줄이기 위한 참조
     [SerializeField] private Player move; // 슬라이딩 상채 확인
+    [SerializeField] private PlayerStat playerStat;  // 공격력 참조
 
     private void Start()
     {
@@ -26,6 +27,10 @@ public class BulletPos : MonoBehaviour
 
         if (move == null)
             move = FindObjectOfType<Player>();
+
+        //자동 연결
+        if (playerStat == null)
+            playerStat = FindObjectOfType<PlayerStat>();
     }
     private void Update()
     {
@@ -78,7 +83,12 @@ public class BulletPos : MonoBehaviour
 
         // 4. 총알 스프라이트를 방향에 맞게 회전
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); // Z축 회전 (2D)     
+        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); // Z축 회전 (2D)
+                                     
+        //공격력 적용 
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        if (bulletScript != null && playerStat != null)
+            bulletScript.Init(playerStat.attackDamage, 0); // percent 0 또는 필요한 값
     }
     public void ShootCounterBullets()
     {
@@ -105,6 +115,10 @@ public class BulletPos : MonoBehaviour
 
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                 bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+                Bullet bulletScript = bullet.GetComponent<Bullet>();
+                if (bulletScript != null && playerStat != null)
+                    bulletScript.Init(playerStat.attackDamage, 0);
             }
         }
     }
