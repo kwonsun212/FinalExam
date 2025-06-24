@@ -17,10 +17,16 @@ public class MpPotion : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Debug.Log("Q 키 입력 감지됨");
+            Debug.Log("2번 키 입력 감지됨");
             UsePotion();
+        }
+
+        //4번키 누르면 포션 1개 회복
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            MpPCount++;
         }
     }
     public void UsePotion()

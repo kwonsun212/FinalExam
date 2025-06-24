@@ -7,4 +7,7 @@ public class PlayerData
 {
     public float hp;
     public float mp;
+
+    public int hpPotionCount;  
+    public int mpPotionCount;   
 }

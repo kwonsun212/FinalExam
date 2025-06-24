@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     bool isAttacking = false;       //공격 중인지 여부(공격중이면 이동 불가)
 
     public bool IsSliding = false;           // 슬라이딩 중인지 여부
-    public float SlidingSpeed = 20f;             // 슬라이딩 속도
+    public float SlidingSpeed = 40f;             // 슬라이딩 속도
     public float SlideDuration = 0.4f;         // 슬라이딩 시간
     private Vector2 SlideDirection;            // 슬라이딩 방향 고정
 

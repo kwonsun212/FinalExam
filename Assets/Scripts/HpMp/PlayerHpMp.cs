@@ -34,18 +34,7 @@ public class PlayerHpMp : Entity
 
     private void Update()
     {
-        // 기본 공격
-        if (Input.GetKeyDown("1"))
-        {
-            HP += 100;
-            target.TakeDamage(20);
-        }
-        // 스킬 공격
-        else if (Input.GetKeyDown("2"))
-        {
-            MP -= 100;
-            target.TakeDamage(55);
-        }
+        
     }
 
     // 기본 체력 + 스탯 보너스 + 버프 등과 같이 계산

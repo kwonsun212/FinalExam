@@ -15,10 +15,15 @@ public class HpPotion : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("R 키 입력 감지됨");
+            Debug.Log("1번 키 입력 감지됨");
             UsePotion();
+        }
+        //4번키 누르면 포션 1개 회복
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            HpPCount ++;
         }
     }
     public void UsePotion()

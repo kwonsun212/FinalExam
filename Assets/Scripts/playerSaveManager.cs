@@ -13,11 +13,16 @@ public static class PlayerSaveManager
     // 플레이어 데이터를 JSON 형식으로 저장
     public static void Save(PlayerHpMp player)
     {
+        HpPotion hpPotion = GameObject.FindObjectOfType<HpPotion>();
+        MpPotion mpPotion = GameObject.FindObjectOfType<MpPotion>();
+
         // 저장할 데이터 생성
         PlayerData data = new PlayerData
         {
             hp = player.HP,
-            mp = player.MP
+            mp = player.MP,
+            hpPotionCount = hpPotion != null ? hpPotion.HpPCount : 0,
+            mpPotionCount = mpPotion != null ? mpPotion.MpPCount : 0
         };
 
 
@@ -41,6 +46,15 @@ public static class PlayerSaveManager
         // 불러온 값을 플레이어에 적용
         player.HP = data.hp;
         player.MP = data.mp;
+
+        HpPotion hpPotion = GameObject.FindObjectOfType<HpPotion>();
+        MpPotion mpPotion = GameObject.FindObjectOfType<MpPotion>();
+
+        if (hpPotion != null)
+            hpPotion.HpPCount = data.hpPotionCount;
+
+        if (mpPotion != null)
+            mpPotion.MpPCount = data.mpPotionCount;
     }
 
 
