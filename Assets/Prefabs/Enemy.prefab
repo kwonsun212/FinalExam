@@ -269,4 +269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
+  animCon: []
   target: {fileID: 0}
+  isLive: 1
+  maxHP: 100
+  expOrbPrefab: {fileID: 4126964538240559118, guid: c98b7576b0b69494ba94877f01cbe32c,
+    type: 3}

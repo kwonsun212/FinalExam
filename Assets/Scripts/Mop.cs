@@ -19,6 +19,8 @@ public class Mop : MonoBehaviour
     Animator anim;
     SpriteRenderer spriter;
 
+    [SerializeField] private GameObject expOrbPrefab;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -69,5 +71,21 @@ public class Mop : MonoBehaviour
         isLive = false;
         anim.SetTrigger("Dead");
 
+        // 경험치 구슬 1~5개 랜덤 생성
+        if (expOrbPrefab != null)
+        {
+            int orbCount = Random.Range(1, 6); // 1 이상, 6 미만 → 1~5
+
+            for (int i = 0; i < orbCount; i++)
+            {
+                // 약간의 위치 랜덤 offset 추가
+                Vector3 randomOffset = new Vector3(
+                    Random.Range(-0.3f, 0.3f),
+                    Random.Range(-0.3f, 0.3f),
+                    0
+                );
+                Instantiate(expOrbPrefab, transform.position + randomOffset, Quaternion.identity);
+            }
+        }
     }
 }
