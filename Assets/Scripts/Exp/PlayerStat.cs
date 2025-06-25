@@ -21,6 +21,16 @@ public class PlayerStat : MonoBehaviour
 
     public float attackDamage = 50f;
 
+    [Header("Currency")]
+    public int gold = 0;        // ∫∏¿Ø ∞ÒµÂ
+
+    // ∞ÒµÂ »πµÊ
+    public void AddGold(int amount)
+    {
+        gold += amount;
+        Debug.Log($"∞ÒµÂ +{amount} («ˆ¿Á ∞ÒµÂ: {gold})");
+    }
+
     private void Start()
     {
         UpdateExpUI(); // Ω√¿€ Ω√ UI √ ±‚»≠

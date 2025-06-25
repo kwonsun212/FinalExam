@@ -15,6 +15,7 @@ public static class PlayerSaveManager
     {
         HpPotion hpPotion = GameObject.FindObjectOfType<HpPotion>();
         MpPotion mpPotion = GameObject.FindObjectOfType<MpPotion>();
+        PlayerStat stat = GameObject.FindObjectOfType<PlayerStat>();
 
         // 저장할 데이터 생성
         PlayerData data = new PlayerData
@@ -22,7 +23,8 @@ public static class PlayerSaveManager
             hp = player.HP,
             mp = player.MP,
             hpPotionCount = hpPotion != null ? hpPotion.HpPCount : 0,
-            mpPotionCount = mpPotion != null ? mpPotion.MpPCount : 0
+            mpPotionCount = mpPotion != null ? mpPotion.MpPCount : 0,
+            gold = stat != null ? stat.gold : 0      // ← gold 필드 추가
         };
 
 
@@ -55,6 +57,14 @@ public static class PlayerSaveManager
 
         if (mpPotion != null)
             mpPotion.MpPCount = data.mpPotionCount;
+
+        // 불러온 gold를 PlayerStat에 적용
+        PlayerStat stat = GameObject.FindObjectOfType<PlayerStat>();
+        if (stat != null)
+        {
+            stat.gold = data.gold;
+        }
+
     }
 
 
@@ -63,4 +73,33 @@ public static class PlayerSaveManager
     {
         return File.Exists(SavePath);
     }
+    public static void ResetExceptPotions(PlayerHpMp player)
+    {
+        if (player == null) return;
+
+        // 1) 기존 JSON에서 포션 정보만 읽어오기
+        int hpPotions = 0, mpPotions = 0;
+        if (File.Exists(SavePath))
+        {
+            string oldJson = File.ReadAllText(SavePath);
+            var oldData = JsonUtility.FromJson<PlayerData>(oldJson);
+            hpPotions = oldData.hpPotionCount;
+            mpPotions = oldData.mpPotionCount;
+        }
+
+        // 2) 기본 hp/mp로 데이터 새로 생성
+        PlayerData newData = new PlayerData
+        {
+            hp = player.MaxHP,       // 최대 HP
+            mp = player.MaxMP,       // 최대 MP
+            hpPotionCount = hpPotions,
+            mpPotionCount = mpPotions
+        };
+
+        // 3) 덮어쓰기
+        string newJson = JsonUtility.ToJson(newData, true);
+        File.WriteAllText(SavePath, newJson);
+    }
+
+
 }

@@ -52,6 +52,9 @@ public class MpPotion : MonoBehaviour
 
 
         MpPCount--;
+
+        // **변경된 포션 개수 즉시 저장**
+        PlayerSaveManager.Save(player);
         Debug.Log($"{potionData.itemName} 사용: MP+{potionData.manaAmount}");
     }
 }

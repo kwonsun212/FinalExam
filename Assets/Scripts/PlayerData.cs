@@ -9,5 +9,7 @@ public class PlayerData
     public float mp;
 
     public int hpPotionCount;  
-    public int mpPotionCount;   
+    public int mpPotionCount;
+
+    public int gold;
 }

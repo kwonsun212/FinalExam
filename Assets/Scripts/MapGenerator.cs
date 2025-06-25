@@ -30,10 +30,11 @@ public class MapGenerator : MonoBehaviour
     public Transform player;     // 씬에 배치된 Player 오브젝트
     public Vector3 spawnOffset;  // 타일 중심 보정용(예: (0.5f,0.5f,0))
 
-    [Header("Enemy (Mop) Spawn")]
-    public GameObject mopPrefab;            // Mop 프리팹
-    public int minMopsPerRoom = 1;          // 방당 최소 Mop 수
-    public int maxMopsPerRoom = 3;          // 방당 최대 Mop 수
+    [Header("Enemy Spawn")]
+    [Tooltip("스폰 가능한 Enemy 프리팹들")]
+    public List<GameObject> enemyPrefabs;    // 6개 할당
+    public int minEnemiesPerRoom = 1;          // 방당 최소 Mop 수
+    public int maxEnemiesPerRoom = 3;          // 방당 최대 Mop 수
 
     private List<Rect> rooms = new List<Rect>();
 
@@ -78,12 +79,12 @@ public class MapGenerator : MonoBehaviour
                 rooms.Add(newRoom);
 
                 //방 안에 Mop 랜덤 스폰
-                SpawnMopsInRoom(newRoom);
+                rooms.Add(newRoom);
 
                 rooms.Add(newRoom);
                 // 첫 번째 방(인덱스 0)에는 몹 스폰하지 않기
                 if (rooms.Count > 1)
-                    SpawnMopsInRoom(newRoom);
+                    SpawnEnemiesInRoom(newRoom);
             }
         }
     }
@@ -144,26 +145,39 @@ public class MapGenerator : MonoBehaviour
         player.position = worldPos;
     }
 
-    void SpawnMopsInRoom(Rect room)
+    void SpawnEnemiesInRoom(Rect room)
     {
-        if (mopPrefab == null || player == null) return;
+        if (enemyPrefabs == null || enemyPrefabs.Count == 0 || player == null) return;
 
-        int count = Random.Range(minMopsPerRoom, maxMopsPerRoom + 1);
-        var playerRig = player.GetComponent<Rigidbody2D>();
+        int count = Random.Range(minEnemiesPerRoom, maxEnemiesPerRoom + 1);
+        Rigidbody2D playerRig = player.GetComponent<Rigidbody2D>();
 
         for (int i = 0; i < count; i++)
         {
+            // 1) 랜덤 프리팹 선택
+            GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+
+            // 2) 랜덤 위치 계산 (방 안 중앙은 피해서 1타일 여유)
             int x = Random.Range((int)room.xMin + 1, (int)room.xMax - 1);
             int y = Random.Range((int)room.yMin + 1, (int)room.yMax - 1);
-
             Vector3 spawnPos = floorTilemap.CellToWorld(
                 new Vector3Int(x, y, 0)
             ) + new Vector3(0.5f, 0.5f, 0f);
 
-            GameObject mopGO = Instantiate(mopPrefab, spawnPos, Quaternion.identity);
-            Mop mop = mopGO.GetComponent<Mop>();
+            // 3) 인스턴스화 & 타겟 설정
+            GameObject go = Instantiate(prefab, spawnPos, Quaternion.identity);
+            Mop mop = go.GetComponent<Mop>();
             if (mop != null)
+            {
                 mop.target = playerRig;
+            }
+            else
+            {
+                // 다른 Enemy 스크립트를 쓴다면 여기에 추가로 처리
+                var entity = go.GetComponent<Entity>();
+                if (entity != null && playerRig != null)
+                    entity.target = playerRig.GetComponent<Entity>();
+            }
         }
     }
 }

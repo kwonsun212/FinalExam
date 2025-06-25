@@ -75,6 +75,12 @@ public class PlayerHpMp : Entity
             }
   
                 isDead = true;
+            
+            var deathUI = FindObjectOfType<DeathPopupController>();
+            if (deathUI != null)
+            {
+                deathUI.ShowDeathPopup();  // 이제 0.4초 뒤에 패널이 뜹니다.
+            }
         }
     }
 

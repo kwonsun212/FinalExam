@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class Mop : MonoBehaviour
@@ -90,6 +89,20 @@ public class Mop : MonoBehaviour
                     Random.Range(-0.3f, 0.3f), 0);
                 Instantiate(expOrbPrefab, transform.position + offset, Quaternion.identity);
             }
+        }
+        // 사망 시 골드 드롭
+        int goldDrop = Random.Range(1, 6);
+        PlayerStat stat = GameObject.FindObjectOfType<PlayerStat>();
+        if (stat != null)
+        {
+            stat.AddGold(goldDrop);
+        }
+
+        //변경된 골드까지 포함해 즉시 저장
+        PlayerHpMp player = GameObject.FindObjectOfType<PlayerHpMp>();
+        if (player != null)
+        {
+            PlayerSaveManager.Save(player);
         }
     }
 
